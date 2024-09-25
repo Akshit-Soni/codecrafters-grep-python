@@ -10,7 +10,7 @@ def match_pattern(input_line, pattern):
     elif pattern == "\\d":
         return any(c.isdigit() for c in input_line)
     elif pattern == "\\w":
-        return any(c.isdigit() for c in input_line)
+        return any(c.isalnum() for c in input_line)
     else:
         raise RuntimeError(f"Unhandled pattern: {pattern}")
 
