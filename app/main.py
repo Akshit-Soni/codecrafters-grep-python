@@ -9,17 +9,16 @@ class Pattern:
 # def combined_patterns(input_line, pattern):
 
 
-def match_pattern(input_line, pattern):
-    if pattern.startswith('^'):
-        return match_pattern(input_line, pattern[1:]) if input_line else False
-    
+def match_pattern(input_line, pattern):    
     if len(input_line) == 0 and len(pattern) == 0:
         return True
     if not pattern:
         return True
     if not input_line:
         return False
-    if pattern[0] == input_line[0]:
+    if pattern[0] == "^":
+        return match_pattern(input_line, pattern[1:])
+    elif pattern[0] == input_line[0]:
         return match_pattern(input_line[1:], pattern[1:])
     elif pattern[:2] == Pattern.DIGIT:
         for i in range(len(input_line)):
