@@ -1,40 +1,36 @@
 import sys
 
+
 # import pyparsing - available if you need it!
 # import lark - available if you need it!
+
 
 def matcher(input_line, pattern):
     ptr1 = 0
     ptr2 = 0
-    
+    if input_line == "" and pattern == "":
+        return True
+    elif input_line == "":
+        return False
+    elif pattern == "":
+        return True
     while ptr1 < len(input_line):
-        if ptr2 < len(pattern) and pattern[ptr2] == '\\':
-            # Check for escape sequences
-            if ptr2 + 1 < len(pattern) and pattern[ptr2 + 1] in ['d', 'w']:
-                if pattern[ptr2 + 1] == 'd' and input_line[ptr1].isdigit():
-                    return matcher(input_line[ptr1 + 1:], pattern[ptr2 + 2:])
-                elif pattern[ptr2 + 1] == 'w' and input_line[ptr1].isalnum():
-                    return matcher(input_line[ptr1 + 1:], pattern[ptr2 + 2:])
-                else:
-                    ptr1 += 1
-                    continue
-        elif ptr2 < len(pattern) and pattern[ptr2] == input_line[ptr1]:
-            # Normal character match
-            return matcher(input_line[ptr1 + 1:], pattern[ptr2 + 1:])
-        elif ptr2 < len(pattern) and pattern[ptr2] == '+':
-            # Handle the '+' quantifier
-            if ptr2 == 0:
-                return False  # '+' cannot be at the start of a pattern
-            # Check if previous character matches at least once
-            if ptr1 < len(input_line) and input_line[ptr1] == pattern[ptr2 - 1]:
-                return matcher(input_line[ptr1 + 1:], pattern)  # Match one or more
+        if ptr2 + 1 < len(pattern) and pattern[ptr2 : ptr2 + 2] == "\\d":
+            if input_line[ptr1].isdigit():
+                return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 2 :])
             else:
-                return matcher(input_line[ptr1 + 1:], pattern)  # Try next character
+                ptr1 = ptr1 + 1
+        elif ptr2 + 1 < len(pattern) and pattern[ptr2 : ptr2 + 2] == "\\w":
+            if input_line[ptr1].isalnum():
+                return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 2 :])
+            else:
+                ptr1 = ptr1 + 1
+        elif input_line[ptr1] == pattern[ptr2]:
+            return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 1 :])
         else:
-            ptr1 += 1
-            
-    # If the pattern ends, check for leftover characters
-    return ptr2 >= len(pattern)
+            ptr1 = ptr1 + 1
+    return False
+
 
 def match_pattern(input_line, pattern):
     if len(pattern) == 1:
@@ -69,17 +65,21 @@ def match_pattern(input_line, pattern):
     else:
         return matcher(input_line, pattern)
 
+
 def main():
     pattern = sys.argv[2]
     input_line = sys.stdin.read()
     if sys.argv[1] != "-E":
         print("Expected first argument to be '-E'")
         exit(1)
+    # You can use print statements as follows for debugging, they'll be visible when running tests.
     print("Logs from your program will appear here!")
+    # Uncomment this block to pass the first stage
     if match_pattern(input_line, pattern):
         exit(0)
     else:
         exit(1)
+
 
 if __name__ == "__main__":
     main()
