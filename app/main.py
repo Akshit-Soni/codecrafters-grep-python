@@ -1,17 +1,11 @@
 import sys
-
 # import pyparsing - available if you need it!
 # import lark - available if you need it!
 class Pattern:
-    DIGIT = "\\d"
-    ALNUM = "\\w"
-
+    DIGIT = "\d"
+    ALNUM = "\w"
+# def combined_patterns(input_line, pattern):
 def match_pattern(input_line, pattern):
-    if len(pattern) == 1:
-        return pattern in input_line
-    elif pattern == "\\d":
-        return any(c.isdigit() for c in input_line)
-    
     if len(input_line) == 0 and len(pattern) == 0:
         return True
     if not pattern:
@@ -31,35 +25,21 @@ def match_pattern(input_line, pattern):
             return match_pattern(input_line[1:], pattern[2:])
         else:
             return False
-    
-    elif pattern == "\\w":
-        return any(c.isalnum() for c in input_line)
     elif pattern[0] == "[" and pattern[-1] == "]":
-        if pattern[1] == r"^":
-            return not any(char in pattern for char in input_line)
-        return any(char in pattern[1:-1] for char in input_line)
+        if pattern[1] == "^":
+            chrs = list(pattern[2:-1])
+        return False
     else:
-        raise RuntimeError(f"Unhandled pattern: {pattern}")
         return match_pattern(input_line[1:], pattern)
-
-
 def main():
     pattern = sys.argv[2]
     input_line = sys.stdin.read()
-
     if sys.argv[1] != "-E":
         print("Expected first argument to be '-E'")
         exit(1)
-
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!")
-
-    
     if match_pattern(input_line, pattern):
         exit(0)
     else:
         exit(1)
-
-
 if __name__ == "__main__":
     main()
