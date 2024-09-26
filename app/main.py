@@ -16,6 +16,35 @@ def match_pattern(input_line, pattern):
             print(f"Input exhausted but pattern remains: '{pattern[pattern_index:]}'")
             return False
 
+        # Check for character classes
+        if pattern[pattern_index] == "[":
+            close_bracket_index = pattern.find("]", pattern_index)
+            if close_bracket_index == -1:
+                print("Error: Mismatched brackets in pattern.")
+                return False
+
+            # Extract character class
+            char_class = pattern[pattern_index + 1:close_bracket_index]
+            is_negative = char_class.startswith("^")
+
+            if is_negative:
+                char_class = char_class[1:]  # Remove '^' for negative check
+
+            match_found = False
+            while input_index < len(input_line):
+                if (is_negative and input_line[input_index] in char_class) or \
+                   (not is_negative and input_line[input_index] not in char_class):
+                    match_found = True
+                    input_index += 1  # Move past the matched character
+                    pattern_index = close_bracket_index + 1  # Move past the character class
+                    break
+                input_index += 1  # Move to next character in input
+
+            if not match_found:
+                print(f"No matching character found for class '{pattern[pattern_index:close_bracket_index + 1]}'.")
+                return False
+            continue
+
         # Match digits
         if pattern[pattern_index:pattern_index + 2] == Pattern.DIGIT:
             # Look for a digit anywhere in the remaining input
