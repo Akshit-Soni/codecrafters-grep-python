@@ -10,8 +10,6 @@ class Pattern:
 
 
 def match_pattern(input_line, pattern):    
-    if len(input_line) == 0 and len(pattern) == 0:
-        return True
     if not pattern:
         return True
     if not input_line:
