@@ -4,8 +4,8 @@ import sys
 # import lark - available if you need it!
 
 class Pattern:
-    DIGIT = r"\\d"
-    ALNUM = r"\\w"
+    DIGIT = "\d"
+    ALNUM = "\w"
 
 # def combined_patterns(input_line, pattern):
 def match_pattern(input_line, pattern):
