@@ -10,6 +10,8 @@ class Pattern:
 
 
 def match_pattern(input_line, pattern):
+    if pattern.startswith('^'):
+        return match_pattern(input_line, pattern[1:]) if input_line else False
     if len(input_line) == 0 and len(pattern) == 0:
         return True
     if not pattern:
