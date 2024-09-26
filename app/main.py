@@ -1,8 +1,8 @@
 import sys
 
-# Define the class to hold patterns, using raw strings
+# Use raw strings for pattern definitions
 class Pattern:
-    DIGIT = r"\d"  # Use raw strings to avoid warnings
+    DIGIT = r"\d"
     ALNUM = r"\w"
 
 def match_pattern(input_line, pattern):
@@ -10,43 +10,26 @@ def match_pattern(input_line, pattern):
     ptr2 = 0  # Pointer for pattern
 
     while ptr1 < len(input_line) and ptr2 < len(pattern):
-        # Handle digit matching
         if pattern[ptr2:ptr2 + 2] == Pattern.DIGIT:
             if input_line[ptr1].isdigit():
                 ptr1 += 1
                 ptr2 += 2
             else:
                 return False
-        # Handle alphanumeric matching
         elif pattern[ptr2:ptr2 + 2] == Pattern.ALNUM:
             if input_line[ptr1].isalnum():
                 ptr1 += 1
                 ptr2 += 2
             else:
                 return False
-        # Handle character class
-        elif pattern[ptr2] == "[":
-            closing_bracket = pattern.find("]", ptr2)
-            if closing_bracket == -1:  # No closing bracket found
-                return False
-            char_class = pattern[ptr2 + 1:closing_bracket]
-            if char_class.startswith("^"):
-                # Negative character class
-                if input_line[ptr1] in char_class[1:]:  # Check if character is in the class
-                    return False
-            else:
-                if input_line[ptr1] not in char_class:  # Regular character class
-                    return False
-            ptr1 += 1
-            ptr2 = closing_bracket + 1  # Move past the closing bracket
-        # Handle regular character matching
         elif pattern[ptr2] == input_line[ptr1]:
             ptr1 += 1
             ptr2 += 1
         else:
             return False
 
-    # Ensure any remaining characters in the pattern are valid
+    # After processing all characters in the pattern,
+    # ensure that all remaining characters in the pattern are checked
     while ptr2 < len(pattern):
         if pattern[ptr2:ptr2 + 2] == Pattern.DIGIT:
             return False  # Extra digits expected
@@ -54,7 +37,7 @@ def match_pattern(input_line, pattern):
             return False  # Extra alphanumeric expected
         ptr2 += 1
 
-    return ptr1 == len(input_line)  # Check if the entire input_line has been consumed
+    return ptr1 == len(input_line)  # Ensure all input_line is consumed
 
 def main():
     if len(sys.argv) != 3:
@@ -63,7 +46,7 @@ def main():
 
     pattern = sys.argv[2]
     input_line = sys.stdin.read().strip()
-
+    
     if sys.argv[1] != "-E":
         print("Expected first argument to be '-E'")
         exit(1)
