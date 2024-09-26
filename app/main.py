@@ -26,6 +26,14 @@ def matcher(input_line, pattern):
             else:
                 ptr1 = ptr1 + 1
         elif input_line[ptr1] == pattern[ptr2]:
+            print("here")
+            if ptr2 + 1 < len(pattern) and pattern[ptr2 + 1] == "+":
+                while (
+                    ptr1 + 1 < len(input_line)
+                    and input_line[ptr1 + 1] == input_line[ptr1]
+                ):
+                    ptr1 = ptr1 + 1
+                ptr2 = ptr2 + 1
             return matcher(input_line[ptr1 + 1 :], pattern[ptr2 + 1 :])
         else:
             ptr1 = ptr1 + 1
